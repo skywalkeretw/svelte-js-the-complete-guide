@@ -2,60 +2,75 @@
     import ContactCard from "./ContactCard.svelte";
   
     let name = "Max";
-    let jobTitle = ""
-    let description = ""
-    let userImg =""
-    let age = 30;
-    let fun = ""
-    let funStyle = false
-    // let uppercaseName; not required!
-  
-    $: uppercaseName = name.toUpperCase();
-  
-    $: console.log(name);
-  
-    $: if (name === "Maximilian") {
-      console.log("It runs!");
-      age = 31;
-    }
+    let title = "";
+    let image = "";
+    let description = "";
+    let formState = 'empty'
 
-    $: fun.includes("!") ? funStyle = true : funStyle = false
-  
-    function incrementAge() {
-      age += 1;
+    let createdContacts = [] 
+    function addContact() {
+        if (name.trim().length == 0 || title.trim().length == 0 || image.trim().length == 0 || description.trim().length == 0) {
+            formState = 'invalid';
+            return;
+        }
+        formState = 'done'
+        createdContacts = [...createdContacts, {
+            id: Math.random(), 
+            name,
+            title,
+            image,
+            description
+        }]
     }
-  
-    function changeName() {
-      name = "Maximilian";
+    function deleteFirst() {
+        createdContacts = createdContacts.slice(1)
     }
-  
-    function nameInput(event) {
-      const enteredValue = event.target.value;
-      name = enteredValue;
+    function deleteLast() {
+        createdContacts = createdContacts.slice(0,-1)
     }
   </script>
   
   <style>
-    h1 {
-      color: purple;
-    }
-
-    .fun {
-        color: red;
+    #form {
+      width: 30rem;
+      max-width: 100%;
     }
   </style>
   
-  <h1>Hello {uppercaseName}, my age is {age}!</h1>
-  <button on:click={incrementAge}>Change Age</button>
-  <!-- <button on:click="{changeName}">Change Name</button> -->
-  <!-- <input type="text" value={name} on:input={nameInput} /> -->
-  <input type="text" bind:value={name} />
-  <input type="text" bind:value={jobTitle} />
-  <input type="text" bind:value={userImg} />
-  <textarea rows="3" bind:value={description}></textarea>
-  <input type="text" bind:value={fun} class:fun={funStyle}/>
-  <ContactCard userName="{name}" jobTitle="{jobTitle}" {userImg} {description} />
-  
-  <div if:{funStyle}>
-
+  <div id="form">
+    <div class="form-control">
+      <label for="userName">User Name</label>
+      <input type="text" bind:value={name} id="userName" />
+    </div>
+    <div class="form-control">
+      <label for="jobTitle">Job Title</label>
+      <input type="text" bind:value={title} id="jobTitle" />
+    </div>
+    <div class="form-control">
+      <label for="image">Image URL</label>
+      <input type="text" bind:value={image} id="image" />
+    </div>
+    <div class="form-control">
+      <label for="desc">Description</label>
+      <textarea rows="3" bind:value={description} id="desc" />
+    </div>
   </div>
+
+<button on:click={addContact}>Add Card</button>
+<button on:click={deleteFirst}>Delete First</button>
+<button on:click={deleteLast}>Delete Last</button>
+{#if formState == 'invalid'}
+    <p>invalid input</p>
+{:else}
+<p>add data</p>
+{/if}
+
+{#each createdContacts as createdContact, index (createdContact.id)}
+<div>
+    <h2># {index}</h2>
+    <ContactCard userName={createdContact.name} jobTitle={createdContact.title} description={createdContact.description} userImage={createdContact.image} />
+</div>
+
+{:else}
+<p>please start adding contacts</p>
+{/each}

@@ -1,8 +1,8 @@
 <script>
-    export let userName;
-    export let jobTitle;
-    export let description;
-    export let userImg;
+  export let userName;
+  export let jobTitle;
+  export let description;
+  export let userImage;
 </script>
 
 <style>
@@ -11,6 +11,7 @@
     max-width: 30rem;
     border-radius: 5px;
     margin: 1rem 0;
+    background: white;
   }
 
   header {
@@ -25,8 +26,8 @@
     height: 100%;
   }
 
-  .thum-placerholder {
-    background-color: #b64747;
+  .thumb-placeholder {
+    background: #ccc;
   }
 
   img {
@@ -40,7 +41,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
+    padding-left: 1rem;
   }
 
   h1 {
@@ -65,13 +66,12 @@
 
 <div class="contact-card">
   <header>
-    <!-- <div class="{userImg ? 'thumb': 'thum-placerholder'}" > -->
-    <div class="thumb" class:thum-placerholder="{userImg}" >
-      <img src="{userImg}" alt="" />
+    <div class="thumb" class:thumb-placeholder="{!userImage}">
+      <img src={userImage} alt={userName} />
     </div>
     <div class="user-data">
       <h1>{userName}</h1>
-      <h2>Job Title: {jobTitle}</h2>
+      <h2>{jobTitle}</h2>
     </div>
   </header>
   <div class="description">
